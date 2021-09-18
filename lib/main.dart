@@ -14,14 +14,21 @@ class MyApp extends StatelessWidget {
       title: 'Calculator',
       //For Light Mode
       theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.black,
+          brightness: Brightness.light,
+          primaryColor: Colors.white,
+          shadowColor: Colors.grey.shade200,
+          cardColor: Colors.grey.shade50,
+          buttonColor: Colors.grey
+
         /* light theme settings */
       ),
       //For Dark Mode
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.white,
+          brightness: Brightness.dark,
+          primaryColor: Colors.grey.shade800,
+          shadowColor: Colors.black45,
+          cardColor: Colors.grey.shade700,
+          buttonColor: Colors.white
         /* dark theme settings */
       ),
       themeMode: ThemeMode.system,
@@ -104,9 +111,6 @@ class _CalculatorAppState extends State<CalculatorApp> {
 
   void operatorClicked(String label) {
     if (firstOperand != '') operator = label;
-    // if (firstOperand != '' && secondOperand != '') {
-    //   firstOperand = secondOperand;
-    // }
     setState(() {});
   }
 
@@ -131,8 +135,8 @@ class _CalculatorAppState extends State<CalculatorApp> {
       prevOp = '-';
       firstOperand = firstOperand.substring(1);
     }
-    else{
-      prevOp='';
+    else {
+      prevOp = '';
     }
 
     switch (operator) {
@@ -161,25 +165,23 @@ class _CalculatorAppState extends State<CalculatorApp> {
     } else {
       firstOperand += '.';
     }
-    result=firstOperand;
+    result = firstOperand;
     setState(() {
 
     });
   }
 
   void add() {
-
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) + double.parse(secondOperand))
-              .toString()
-          : (double.parse(firstOperand) + double.parse(secondOperand))
-              .toString();
+          ? (-double.parse(firstOperand) + double.parse(secondOperand)).abs()
+          .toString()
+          : (double.parse(firstOperand) + double.parse(secondOperand)).abs()
+          .toString();
     } else {
       total = prevOp != ''
           ? ((-int.parse(firstOperand) + int.parse(secondOperand)).toString())
           : ((int.parse(firstOperand) + int.parse(secondOperand)).toString());
-
     }
 
     setValue();
@@ -192,10 +194,10 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void subtract() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) - double.parse(secondOperand))
-              .toString()
-          : (double.parse(firstOperand) - double.parse(secondOperand))
-              .toString();
+          ? (-double.parse(firstOperand) - double.parse(secondOperand)).abs()
+          .toString()
+          : (double.parse(firstOperand) - double.parse(secondOperand)).abs()
+          .toString();
     } else {
       total = prevOp != ''
           ? (-int.parse(firstOperand) - int.parse(secondOperand)).toString()
@@ -213,10 +215,10 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void multiply() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) * double.parse(secondOperand))
-              .toString()
-          : (double.parse(firstOperand) * double.parse(secondOperand))
-              .toString();
+          ? (-double.parse(firstOperand) * double.parse(secondOperand)).abs()
+          .toString()
+          : (double.parse(firstOperand) * double.parse(secondOperand)).abs()
+          .toString();
     } else {
       total = prevOp != ''
           ? (-int.parse(firstOperand) * int.parse(secondOperand)).toString()
@@ -239,10 +241,10 @@ class _CalculatorAppState extends State<CalculatorApp> {
     }
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) / double.parse(secondOperand))
-              .toString()
-          : (double.parse(firstOperand) / double.parse(secondOperand))
-              .toString();
+          ? (-double.parse(firstOperand) / double.parse(secondOperand)).abs()
+          .toString()
+          : (double.parse(firstOperand) / double.parse(secondOperand)).abs()
+          .toString();
     } else {
       total = prevOp != ''
           ? (-int.parse(firstOperand) / int.parse(secondOperand)).toString()
@@ -259,10 +261,10 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void mod() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) % double.parse(secondOperand))
-              .toString()
-          : (double.parse(firstOperand) % double.parse(secondOperand))
-              .toString();
+          ? (-double.parse(firstOperand) % double.parse(secondOperand)).abs()
+          .toString()
+          : (double.parse(firstOperand) % double.parse(secondOperand)).abs()
+          .toString();
     } else {
       total = prevOp != ''
           ? (-int.parse(firstOperand) % int.parse(secondOperand)).toString()
@@ -371,7 +373,7 @@ class ButtonsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (index) {
-      //First Row
+    //First Row
       case 1:
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -382,7 +384,7 @@ class ButtonsRow extends StatelessWidget {
             Button(label: '/', onTap: onTap),
           ],
         );
-      //Second Row
+    //Second Row
       case 2:
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -393,7 +395,7 @@ class ButtonsRow extends StatelessWidget {
             Button(label: 'x', onTap: onTap),
           ],
         );
-      //Third Row
+    //Third Row
       case 3:
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -404,7 +406,7 @@ class ButtonsRow extends StatelessWidget {
             Button(label: '-', onTap: onTap),
           ],
         );
-      //Fourth Row
+    //Fourth Row
       case 4:
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -415,7 +417,7 @@ class ButtonsRow extends StatelessWidget {
             Button(label: '+', onTap: onTap),
           ],
         );
-      //Fifth Row
+    //Fifth Row
       case 5:
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -438,27 +440,39 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
+    // bool isDarkMode =
+    //     MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Ink(
-      width: label == '0' ? (MediaQuery.of(context).size.width / 2) - 40 : 70,
+      width: label == '0' ? (MediaQuery
+          .of(context)
+          .size
+          .width / 2) - 40 : 70,
       height: 70,
       decoration: BoxDecoration(
-          color: isDarkMode ? Colors.grey.shade800 : Colors.white,
-          borderRadius: BorderRadius.circular(35),
-          boxShadow: [
-            BoxShadow(
-              color: !isDarkMode ? Colors.grey.shade200 : Colors.black45,
-              blurRadius: 5,
-              offset: Offset(3, 3), // changes position of shadow
-            ),
-            BoxShadow(
-              color: !isDarkMode ? Colors.grey.shade50 : Colors.grey.shade700,
-              blurRadius: 5,
-              offset: Offset(-3, -3), // changes position of shadow
-            ),
-          ],
-         /* gradient: label == '0'
+        // color: !isDarkMode ? Colors.white : Colors.grey.shade800,
+        color: Theme
+            .of(context)
+            .primaryColor,
+        borderRadius: BorderRadius.circular(35),
+        boxShadow: [
+          BoxShadow(
+            // color: !isDarkMode ? Colors.grey.shade200 : Colors.black45,
+            color: Theme
+                .of(context)
+                .shadowColor,
+            blurRadius: 5,
+            offset: Offset(3, 3), // changes position of shadow
+          ),
+          BoxShadow(
+            // color: !isDarkMode ? Colors.grey.shade50 : Colors.grey.shade700,
+            color: Theme
+                .of(context)
+                .cardColor,
+            blurRadius: 5,
+            offset: Offset(-3, -3), // changes position of shadow
+          ),
+        ],
+        /* gradient: label == '0'
               ? LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -493,6 +507,11 @@ class Button extends StatelessWidget {
       return Colors.grey.shade400;
     else if (label == '+' || label == '-' || label == '/' || label == 'x')
       return Colors.orange.shade600;
-    return Theme.of(context).primaryColor;
+    return Theme
+        .of(context)
+        .buttonColor;
   }
+
+
 }
+
