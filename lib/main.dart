@@ -46,12 +46,13 @@ class _CalculatorAppState extends State<CalculatorApp> {
   var firstOperand = '';
   var secondOperand = '';
   var operator = '';
-  var result = '0';
+  var result = '';
   var total = '';
   var prevOp = '';
+  var inputInst = '';
 
   void onButtonTapped(String label) {
-    print(label);
+     print(label);
     switch (label) {
       case 'AC':
         clearAll();
@@ -60,8 +61,10 @@ class _CalculatorAppState extends State<CalculatorApp> {
       case '-':
       case '/':
       case 'x':
+      operatorClicked(label);
+      break;
       case '%':
-        operatorClicked(label);
+        onPercentClicked();
         break;
       case '+/-':
         addSub();
@@ -110,16 +113,17 @@ class _CalculatorAppState extends State<CalculatorApp> {
   }
 
   void operatorClicked(String label) {
-    if (firstOperand != '') operator = label;
+    if (firstOperand != '' && secondOperand=='') operator = label;
     setState(() {});
   }
 
   void clearAll() {
     setState(() {
+      inputInst='';
       firstOperand = '';
       secondOperand = '';
       operator = '';
-      result = '0';
+      result = '';
       total = '';
     });
   }
@@ -152,9 +156,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
       case '/':
         divide();
         break;
-      case '%':
-        mod();
-        break;
+      // case '%':
+      //   mod();
+      //   break;
     }
   }
 
@@ -174,9 +178,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void add() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) + double.parse(secondOperand)).abs()
+          ? (-double.parse(firstOperand) + double.parse(secondOperand)).toStringAsFixed(2)
           .toString()
-          : (double.parse(firstOperand) + double.parse(secondOperand)).abs()
+          : (double.parse(firstOperand) + double.parse(secondOperand)).toStringAsFixed(2)
           .toString();
     } else {
       total = prevOp != ''
@@ -194,9 +198,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void subtract() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) - double.parse(secondOperand)).abs()
+          ? (-double.parse(firstOperand) - double.parse(secondOperand)).toStringAsFixed(2)
           .toString()
-          : (double.parse(firstOperand) - double.parse(secondOperand)).abs()
+          : (double.parse(firstOperand) - double.parse(secondOperand)).toStringAsFixed(2)
           .toString();
     } else {
       total = prevOp != ''
@@ -215,9 +219,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void multiply() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) * double.parse(secondOperand)).abs()
+          ? (-double.parse(firstOperand) * double.parse(secondOperand)).toStringAsFixed(2)
           .toString()
-          : (double.parse(firstOperand) * double.parse(secondOperand)).abs()
+          : (double.parse(firstOperand) * double.parse(secondOperand)).toStringAsFixed(2)
           .toString();
     } else {
       total = prevOp != ''
@@ -241,9 +245,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
     }
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) / double.parse(secondOperand)).abs()
+          ? (-double.parse(firstOperand) / double.parse(secondOperand)).toStringAsFixed(2)
           .toString()
-          : (double.parse(firstOperand) / double.parse(secondOperand)).abs()
+          : (double.parse(firstOperand) / double.parse(secondOperand)).toStringAsFixed(2)
           .toString();
     } else {
       total = prevOp != ''
@@ -261,9 +265,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
   void mod() {
     if (firstOperand.contains('.') || secondOperand.contains('.')) {
       total = prevOp != ''
-          ? (-double.parse(firstOperand) % double.parse(secondOperand)).abs()
+          ? (-double.parse(firstOperand) % double.parse(secondOperand)).toStringAsFixed(2)
           .toString()
-          : (double.parse(firstOperand) % double.parse(secondOperand)).abs()
+          : (double.parse(firstOperand) % double.parse(secondOperand)).toStringAsFixed(2)
           .toString();
     } else {
       total = prevOp != ''
@@ -279,6 +283,7 @@ class _CalculatorAppState extends State<CalculatorApp> {
 
   void setValue() {
     setState(() {
+      inputInst = firstOperand + operator + secondOperand;
       result = total;
       firstOperand = total;
       secondOperand = '';
@@ -299,6 +304,22 @@ class _CalculatorAppState extends State<CalculatorApp> {
     }
   }
 
+  void onPercentClicked(){
+    if(firstOperand!='' && secondOperand=='') {
+      firstOperand = (prevOp != ''
+          ? (-double.parse(firstOperand) * 1 / 100).toStringAsFixed(2)
+          : (double.parse(firstOperand) * 1 / 100).toStringAsFixed(2)).toString();
+      total=firstOperand;
+    }
+    else if(firstOperand!='' && secondOperand!='') {
+      secondOperand = (prevOp != ''
+          ? (-double.parse(secondOperand) * 1 / 100).toStringAsFixed(2)
+          : (double.parse(secondOperand) * 1 / 100).toStringAsFixed(2)).toString();
+      total=secondOperand;
+    }
+    setValue();
+  }
+
   //Root Widget for calculator
   @override
   Widget build(BuildContext context) {
@@ -308,7 +329,7 @@ class _CalculatorAppState extends State<CalculatorApp> {
           padding: EdgeInsets.all(20.0),
           child: Column(children: [
             //Input/Result Field
-            Expanded(flex: 3, child: InputAndResultField(result: result)),
+            Expanded(flex: 3, child: InputAndResultField(inst:inputInst,result: result)),
             Expanded(
               flex: 7,
               child: ButtonsFields(onTap: onButtonTapped),
@@ -322,8 +343,9 @@ class _CalculatorAppState extends State<CalculatorApp> {
 
 class InputAndResultField extends StatelessWidget {
   final result;
+  final inst;
 
-  const InputAndResultField({this.result});
+  const InputAndResultField({this.inst,this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -332,10 +354,20 @@ class InputAndResultField extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10.0),
         child: Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            result,
-            style: TextStyle(fontSize: 44, fontWeight: FontWeight.normal),
+          alignment: Alignment.bottomRight,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                inst,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,color: Colors.orange.shade600),
+              ),
+              Text(
+                result,
+                style: TextStyle(fontSize: 44, fontWeight: FontWeight.normal),
+              ),
+            ],
           ),
         ),
       ),
